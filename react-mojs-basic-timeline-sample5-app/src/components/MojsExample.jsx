@@ -71,6 +71,36 @@ const MojsExample = ({tik, delay = 300}) => {
     };
   }, [lineParameters]);
 
+  const triangleParameters = useMemo(() => {
+    return {
+      left: '50%',
+      top: '50%',
+      shape: 'polygon',
+      radius: 15,
+      duration: 700,
+      fill: 'black',
+      scale: {1: 0},
+      delay: 850,
+      easing: 'cubic.out',
+    };
+  }, []);
+
+  const triangle1Parameters = useMemo(() => {
+    return {
+      ...triangleParameters,
+      y: {80: -15},
+      rotate: 0,
+    };
+  }, []);
+
+  const triangle2Parameters = useMemo(() => {
+    return {
+      ...triangleParameters,
+      y: {'-80': -15}, // can parse!
+      rotate: 180,
+    };
+  }, []);
+
   useEffect(() => {
     const circle1 = new mojs.Shape({
       ...parameters,
@@ -136,6 +166,17 @@ const MojsExample = ({tik, delay = 300}) => {
     const line2 = new mojs.Shape({...line2Parameters, parent: animDom.current});
 
     tl.add([line1, line2]);
+
+    const triangle1 = new mojs.Shape({
+      ...triangle1Parameters,
+      parent: animDom.current,
+    });
+    const triangle2 = new mojs.Shape({
+      ...triangle2Parameters,
+      parent: animDom.current,
+    });
+
+    tl.add([triangle1, triangle2]);
   }, []);
 
   useEffect(() => {
