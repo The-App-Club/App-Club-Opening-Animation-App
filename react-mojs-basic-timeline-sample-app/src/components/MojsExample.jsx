@@ -57,9 +57,18 @@ const MojsExample = ({tik, delay = 300}) => {
   }, [parameters]);
 
   useEffect(() => {
-    const shape1 = new mojs.Shape(shape1Parameters);
-    const shape2 = new mojs.Shape(shape2Parameters);
-    const shape3 = new mojs.Shape(shape3Parameters);
+    const shape1 = new mojs.Shape({
+      ...shape1Parameters,
+      parent: animDom.current,
+    });
+    const shape2 = new mojs.Shape({
+      ...shape2Parameters,
+      parent: animDom.current,
+    });
+    const shape3 = new mojs.Shape({
+      ...shape3Parameters,
+      parent: animDom.current,
+    });
     tl.add([shape1, shape2, shape3]);
   }, []);
 
