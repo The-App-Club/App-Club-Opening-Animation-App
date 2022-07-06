@@ -8,6 +8,7 @@ const MojsExample = ({tik, delay = 300}) => {
   const animDom = useRef();
 
   const tl = useMemo(() => {
+    // https://mojs.github.io/api/tweens/tween.html
     return new Timeline({delay});
   }, []);
 
@@ -61,9 +62,18 @@ const MojsExample = ({tik, delay = 300}) => {
   }, [parameters]);
 
   useEffect(() => {
-    const shape1 = new mojs.Shape(shape1Parameters).then(step1);
-    const shape2 = new mojs.Shape(shape2Parameters).then(step1);
-    const shape3 = new mojs.Shape(shape3Parameters).then(step1);
+    const shape1 = new mojs.Shape({
+      ...shape1Parameters,
+      parent: animDom.current,
+    }).then(step1);
+    const shape2 = new mojs.Shape({
+      ...shape2Parameters,
+      parent: animDom.current,
+    }).then(step1);
+    const shape3 = new mojs.Shape({
+      ...shape3Parameters,
+      parent: animDom.current,
+    }).then(step1);
     // shape1.el.style['mix-blend-mode'] = 'screen';
     // shape2.el.style['mix-blend-mode'] = 'screen';
     // shape3.el.style['mix-blend-mode'] = 'screen';
