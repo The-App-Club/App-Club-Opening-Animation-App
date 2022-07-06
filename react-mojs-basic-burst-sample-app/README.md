@@ -1,0 +1,3 @@
+- Reference
+  - [burst](https://mojs.github.io/tutorials/burst/#burst-2)
+  - [demo](https://codepen.io/sol0mka/pen/JKWKVR)
