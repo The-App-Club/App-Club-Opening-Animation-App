@@ -8,6 +8,7 @@ const MojsExample = ({tik, delay = 300}) => {
   const animDom = useRef();
 
   const tl = useMemo(() => {
+    // https://mojs.github.io/api/tweens/tween.html
     return new Timeline({delay});
   }, []);
 
