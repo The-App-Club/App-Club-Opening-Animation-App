@@ -21,7 +21,6 @@ const MojsExample = ({tik}) => {
       radius: {25: 185},
       count: 11,
       rotate: {0: 180},
-      duration: 1000,
       onStart(isForward, isYoyo) {
         console.log(`onStart`);
       },
@@ -41,6 +40,7 @@ const MojsExample = ({tik}) => {
         radius: {0: 140},
         // rand string - generates random value for every child rand( min, max )
         degreeShift: 'rand(-360, 360)',
+        duration: 2000,
         // stagger string( start, step ) for every child
         delay: 'stagger(0, 25)',
       },
