@@ -2,3 +2,4 @@
   - [code](https://github.com/legomushroom/shape-demo1)
   - [demo](https://codepen.io/sol0mka/pen/RRRgLq)
   - [clippath](https://bennettfeely.com/clippy/)
+  - [transform-origin](https://developer.mozilla.org/ja/docs/Web/CSS/transform-origin)
