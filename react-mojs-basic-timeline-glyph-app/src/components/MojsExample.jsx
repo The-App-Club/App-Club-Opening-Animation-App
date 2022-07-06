@@ -57,11 +57,11 @@ const MojsExample = ({tik, delay = 300}) => {
   });
 
   const charSize = useMemo(() => {
-    return 25;
+    return 28;
   }, []);
 
   const leftStep = useMemo(() => {
-    return 22;
+    return 25 - (4 - 1);
   }, []);
 
   const CHAR_HIDE_THEN = useMemo(() => {
@@ -105,11 +105,11 @@ const MojsExample = ({tik, delay = 300}) => {
       ...parameters,
       shape: 'm',
       left: `${1 * leftStep}%`,
-      x: -100,
+      x: -0,
       y: {[350]: 150, easing: shiftCurve},
       scaleY: {1: 1, curve: scaleCShort},
       origin: {'50% 100%': '50% 0%', easing: shiftCurve},
-      delay: 400,
+      delay: 0,
       duration: 1000,
     };
   }, [parameters]);
@@ -125,8 +125,8 @@ const MojsExample = ({tik, delay = 300}) => {
       y: {[-100]: 250, easing: shiftCurve},
       scaleY: {1: 1, curve: scaleC},
       origin: {'50% 0%': '50% 100%', easing: shiftCurve},
-      delay: 600,
-      duration: 800,
+      delay: 0,
+      duration: 1000,
     };
   }, [parameters]);
 
@@ -139,7 +139,7 @@ const MojsExample = ({tik, delay = 300}) => {
       y: {[250]: -100, easing: shiftCurve},
       scaleY: {1: 1, curve: scaleC},
       origin: {'50% 100%': '50% 0%', easing: shiftCurve},
-      delay: 40,
+      delay: 0,
       duration: 1000,
     };
   }, [parameters]);
@@ -153,8 +153,8 @@ const MojsExample = ({tik, delay = 300}) => {
       y: 200,
       scaleX: {1: 1, curve: scaleC},
       origin: {'100% 50%': '0% 100%', easing: shiftCurve},
-      delay: 200,
-      duration: 900,
+      delay: 0,
+      duration: 1000,
     };
   }, [parameters]);
 
@@ -173,7 +173,7 @@ const MojsExample = ({tik, delay = 300}) => {
     const step2 = new mojs.Shape({...step2Parameters, parent: animDom.current})
       .then({
         duration: 700,
-        x: {to: 0, easing: shiftCurve},
+        x: {to: -0, easing: shiftCurve},
         scaleX: {1: 1, curve: scaleCShort},
         origin: {'100% 50%': '0% 50%', easing: shiftCurve},
       })
@@ -208,10 +208,8 @@ const MojsExample = ({tik, delay = 300}) => {
       scaleY: {1: 1, curve: scaleCShort},
       origin: {'50% 100%': '50% 0%', easing: shiftCurve},
     });
-    // .then({...CHAR_HIDE_THEN, delay: 2200});
-
+    // .then(CHAR_HIDE_THEN);
     tl.add([step1, step2, step3, step4]);
-    // tl.add([step1, step2]);
   }, []);
 
   useEffect(() => {
@@ -225,10 +223,16 @@ const MojsExample = ({tik, delay = 300}) => {
     <div
       ref={animDom}
       className={css`
+        position: relative;
         max-width: 20rem;
         margin: 0 auto;
         width: 100%;
         min-height: 3rem;
+        border: 1px solid;
+
+        [data-name='mojs-shape'] {
+          /* margin-left: 0 !important; */
+        }
       `}
     />
   );
