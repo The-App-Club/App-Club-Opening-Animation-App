@@ -2,6 +2,8 @@ import {useRef, useEffect, useState, useCallback, useMemo} from 'react';
 import mojs from '@mojs/core';
 import {cx, css} from '@emotion/css';
 
+import {pointFromVector} from 'popmotion';
+
 const {Timeline} = mojs;
 
 const MojsExample = ({tik, delay = 300}) => {
@@ -9,108 +11,123 @@ const MojsExample = ({tik, delay = 300}) => {
 
   const tl = useMemo(() => {
     // https://mojs.github.io/api/tweens/tween.html
+    // タイムライン全体の開始タイミングを遅らせることができる
     return new Timeline({
       delay,
-      onStart: (isFwd) => {
-        console.log(`onStart`, isFwd);
+      onStart(isForward, isYoyo) {
+        // console.log(`onStart`);
       },
-      onComplete: (isFwd) => {
-        console.log(`onComplete`, !isFwd);
+      onProgress(p, isForward, isYoyo) {
+        // console.log(`onProgress`, p);
+      },
+      onComplete(isForward, isYoyo) {
+        // console.log('onComplete');
       },
     });
   }, []);
 
-  const parameters = useMemo(() => {
+  const baseParameters = useMemo(() => {
     return {
-      left: '50%',
       top: '50%',
+      left: '50%',
       shape: 'polygon',
       duration: 2000,
+      easing: 'cubic.out',
+      isShowEnd: false,
+      fill: 'none',
+      stroke: 'black',
+    };
+  }, []);
+
+  const triangle1Parameters = useMemo(() => {
+    return {
+      ...baseParameters,
       radius: {60: 65},
-      angle: -60,
-      fill: 'none',
-      stroke: 'black',
-      strokeWidth: {30: 5},
-      easing: 'cubic.out',
-      isShowEnd: false,
+      rotate: -60,
+      strokeWidth: {50: 5},
+      delay: 0,
     };
-  }, []);
+  }, [baseParameters]);
 
-  const triangleParameters = useMemo(() => {
+  const triangle2Parameters = useMemo(() => {
     return {
-      left: '50%',
-      top: '50%',
-      shape: 'polygon',
-      duration: 2000,
+      ...baseParameters,
       radius: {85: 125},
-      angle: -60,
-      fill: 'none',
-      stroke: 'black',
+      rotate: -60,
       strokeWidth: {7: 0},
-      easing: 'cubic.out',
       delay: 100,
-      isShowEnd: false,
     };
-  }, []);
+  }, [baseParameters]);
 
-  const triangleParameters1 = useMemo(() => {
+  const triangle3Parameters = useMemo(() => {
     return {
-      ...triangleParameters,
-      strokeWidth: {4: 0},
+      ...baseParameters,
       radius: {85: 95},
-      duration: 1400,
+      rotate: -60,
+      strokeWidth: {4: 0},
+      delay: 100,
     };
-  }, [triangleParameters]);
+  }, [baseParameters]);
 
-  const smallTrianglesParameters = useMemo(() => {
+  const baseSmallTriangleParameters = useMemo(() => {
     return {
-      left: '50%',
-      top: '50%',
-      shape: 'polygon',
-      duration: 2000,
+      ...baseParameters,
       radius: 14,
-      angle: -60,
-      fill: 'none',
-      stroke: 'black',
+      rotate: -60,
       strokeWidth: {14: 4},
       easing: 'expo.out',
-      isShowEnd: false,
     };
-  }, []);
+  }, [baseParameters]);
 
-  // xy position build on polygon trgiangle vertex positionaize
   const smallTrianglesParameters1 = useMemo(() => {
+    const point = {x: 0, y: 0};
+    const angle = -150;
+    const distance = 100;
+    const a = pointFromVector(point, angle, distance);
+
     return {
-      ...smallTrianglesParameters,
-      x: {0: -87},
-      y: {0: -50},
+      ...baseSmallTriangleParameters,
+      x: {0: a.x},
+      y: {0: a.y},
     };
-  }, [smallTrianglesParameters]);
+  }, [baseSmallTriangleParameters]);
 
   const smallTrianglesParameters2 = useMemo(() => {
+    const point = {x: 0, y: 0};
+    const angle = -30;
+    const distance = 100;
+    const a = pointFromVector(point, angle, distance);
+
     return {
-      ...smallTrianglesParameters,
-      x: {0: 87},
-      y: {0: -50},
+      ...baseSmallTriangleParameters,
+      x: {0: a.x},
+      y: {0: a.y},
     };
-  }, [smallTrianglesParameters]);
+  }, [baseSmallTriangleParameters]);
 
   const smallTrianglesParameters3 = useMemo(() => {
+    const point = {x: 0, y: 0};
+    const angle = 90;
+    const distance = 100;
+    const a = pointFromVector(point, angle, distance);
     return {
-      ...smallTrianglesParameters,
-      x: 0,
-      y: {0: 1.15 * 87},
+      ...baseSmallTriangleParameters,
+      x: {0: a.x},
+      y: {0: a.y},
     };
-  }, [smallTrianglesParameters]);
+  }, [baseSmallTriangleParameters]);
 
   useEffect(() => {
-    const shape1 = new mojs.Shape({...parameters, parent: animDom.current});
-    const triangle = new mojs.Shape({
-      ...triangleParameters,
+    const triangle1 = new mojs.Shape({
+      ...triangle1Parameters,
       parent: animDom.current,
     });
-    const triangle1 = new mojs.Shape({
-      ...triangleParameters1,
+    const triangle2 = new mojs.Shape({
+      ...triangle2Parameters,
+      parent: animDom.current,
+    });
+    const triangle3 = new mojs.Shape({
+      ...triangle3Parameters,
       parent: animDom.current,
     });
     const smallTriangle1 = new mojs.Shape({
@@ -126,9 +143,9 @@ const MojsExample = ({tik, delay = 300}) => {
       parent: animDom.current,
     });
     tl.add([
-      shape1,
-      triangle,
       triangle1,
+      triangle2,
+      triangle3,
       smallTriangle1,
       smallTriangle2,
       smallTriangle3,
@@ -142,7 +159,19 @@ const MojsExample = ({tik, delay = 300}) => {
     tl.play();
   }, [tik]);
 
-  return <div ref={animDom} className={css``} />;
+  return (
+    <div
+      ref={animDom}
+      className={css`
+        position: relative;
+        border: 1px solid;
+        max-width: 30rem;
+        min-height: 30rem;
+        width: 100%;
+        overflow: hidden;
+      `}
+    />
+  );
 };
 
 export {MojsExample};
