@@ -11,11 +11,14 @@ const MojsExample = ({tik, delay = 300}) => {
     // https://mojs.github.io/api/tweens/tween.html
     return new Timeline({
       delay,
-      onStart: (isFwd) => {
-        console.log(`onStart`, isFwd);
+      onStart(isForward, isYoyo) {
+        console.log(`onStart`);
       },
-      onComplete: (isFwd) => {
-        console.log(`onComplete`, !isFwd);
+      onProgress(p, isForward, isYoyo) {
+        console.log(`onProgress`, p);
+      },
+      onComplete(isForward, isYoyo) {
+        console.log('onComplete');
       },
     });
   }, []);
@@ -32,6 +35,7 @@ const MojsExample = ({tik, delay = 300}) => {
 
   const parameters = useMemo(() => {
     return {
+      origin: `center center`,
       left: '50%',
       top: '50%',
       radius: circleSize,
@@ -43,6 +47,9 @@ const MojsExample = ({tik, delay = 300}) => {
 
   const lineParameters = useMemo(() => {
     return {
+      origin: `center center`,
+      left: '50%',
+      top: '50%',
       shape: 'line',
       radius: 50,
       radiusY: 0,
@@ -73,10 +80,11 @@ const MojsExample = ({tik, delay = 300}) => {
 
   const triangleParameters = useMemo(() => {
     return {
+      origin: `center center`,
       left: '50%',
       top: '50%',
       shape: 'polygon',
-      radius: 15,
+      radius: 40,
       duration: 700,
       fill: 'black',
       scale: {1: 0},
@@ -88,7 +96,7 @@ const MojsExample = ({tik, delay = 300}) => {
   const triangle1Parameters = useMemo(() => {
     return {
       ...triangleParameters,
-      y: {80: -15},
+      y: {[80]: 0},
       rotate: 0,
     };
   }, []);
@@ -96,7 +104,7 @@ const MojsExample = ({tik, delay = 300}) => {
   const triangle2Parameters = useMemo(() => {
     return {
       ...triangleParameters,
-      y: {'-80': -15}, // can parse!
+      y: {[-80]: 0},
       rotate: 180,
     };
   }, []);
@@ -186,7 +194,24 @@ const MojsExample = ({tik, delay = 300}) => {
     tl.play();
   }, [tik]);
 
-  return <div ref={animDom} className={css``} />;
+  return (
+    <div
+      ref={animDom}
+      className={css`
+        position: relative;
+        border: 1px solid;
+        max-width: 30rem;
+        min-height: 30rem;
+        width: 100%;
+        overflow: hidden;
+
+        @media (max-width: 768px) {
+          max-width: 100%;
+          min-height: 100vh;
+        }
+      `}
+    />
+  );
 };
 
 export {MojsExample};
