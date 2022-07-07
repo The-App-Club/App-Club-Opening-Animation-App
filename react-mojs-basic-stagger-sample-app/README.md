@@ -1,0 +1,3 @@
+- Reference
+  - [stagger](https://mojs.github.io/api/syntax/stagger.html)
+  - [demo](https://codepen.io/sandstedt/pen/pobVeBW)
