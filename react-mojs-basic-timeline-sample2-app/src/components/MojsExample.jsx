@@ -16,49 +16,53 @@ const MojsExample = ({tik, delay = 300}) => {
     return {
       left: '50%',
       top: '50%',
+      origin: `center center`,
       shape: 'polygon',
       isShowEnd: false,
       duration: 800,
-      radius: 65,
-      x: {'-200': 20},
+      radius: 60,
+      x: {[-200]: 20},
     };
   }, []);
 
   const step1 = useMemo(() => {
-    return {x: 0, y: 0, duration: 300, angle: -60, scaleX: 1};
+    return {x: 0, y: 0, duration: 300, angle: -60};
   }, []);
 
   const shape1Parameters = useMemo(() => {
-    return Object.assign({
+    return {
       ...parameters,
       y: {50: -20},
-      fill: 'red',
-      angle: {'-120': '-40'},
-      scaleX: {0: 1.3},
+      fill: 'none',
+      stroke: `black`,
+      strokeWidth: {7: 2},
+      rotate: {[-120]: [0]},
       delay: 0,
-    });
+    };
   }, [parameters]);
 
   const shape2Parameters = useMemo(() => {
-    return Object.assign({
+    return {
       ...parameters,
       y: {30: -30},
-      fill: 'blue',
-      angle: {'-180': '-20'},
-      scaleX: {0: 1.46},
+      fill: 'none',
+      stroke: `black`,
+      strokeWidth: {7: 2},
+      rotate: {[-180]: [0]},
       delay: 75,
-    });
+    };
   }, [parameters]);
 
   const shape3Parameters = useMemo(() => {
-    return Object.assign({
+    return {
       ...parameters,
-      y: {60: '-50'},
-      fill: 'green',
-      angle: {'-220': '-10'},
-      scaleX: {0: 1.3},
+      y: {60: -50},
+      fill: 'none',
+      stroke: `black`,
+      strokeWidth: {7: 2},
+      rotate: {[-240]: [0]},
       delay: 150,
-    });
+    };
   }, [parameters]);
 
   useEffect(() => {
@@ -87,7 +91,18 @@ const MojsExample = ({tik, delay = 300}) => {
     tl.play();
   }, [tik]);
 
-  return <div ref={animDom} className={css``} />;
+  return (
+    <div
+      ref={animDom}
+      className={css`
+        position: relative;
+        max-width: 40rem;
+        width: 100%;
+        min-height: 30rem;
+        border: 1px solid;
+      `}
+    />
+  );
 };
 
 export {MojsExample};
