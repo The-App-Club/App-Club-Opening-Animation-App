@@ -9,13 +9,25 @@ const MojsExample = ({tik, delay = 300}) => {
 
   const tl = useMemo(() => {
     // https://mojs.github.io/api/tweens/tween.html
-    return new Timeline({delay});
+    return new Timeline({
+      delay,
+      onStart(isForward, isYoyo) {
+        // console.log(`onStart`);
+      },
+      onProgress(p, isForward, isYoyo) {
+        // console.log(`onProgress`, p);
+      },
+      onComplete(isForward, isYoyo) {
+        // console.log('onComplete');
+      },
+    });
   }, []);
 
   const parameters = useMemo(() => {
     return {
-      left: '50%',
       top: '50%',
+      left: '50%',
+      origin: `center center`,
       shape: 'polygon',
       duration: 1200,
       radius: {150: 100},
@@ -25,36 +37,37 @@ const MojsExample = ({tik, delay = 300}) => {
   }, []);
 
   const shape1Parameters = useMemo(() => {
-    return Object.assign({
+    // https://developer.mozilla.org/ja/docs/Web/SVG/Attribute/stroke-dasharray
+    return {
       ...parameters,
       stroke: 'red',
       strokeDasharray: {'50% 100%': '0% 100%'},
       strokeDashoffset: {'50%': '-66%'},
-      angle: {'-70': '-60'},
+      rotate: {[0]: [60]},
       delay: 0,
-    });
+    };
   }, [parameters]);
 
   const shape2Parameters = useMemo(() => {
-    return Object.assign({
+    return {
       ...parameters,
       stroke: 'blue',
-      strokeDasharray: {'30% 120%': '0% 120%'},
+      strokeDasharray: {'30% 120%': '0% 100%'},
       strokeDashoffset: {'42%': '-76%'},
-      angle: {'-80': '-60'},
+      rotate: {[0]: [120]},
       delay: 600,
-    });
+    };
   }, [parameters]);
 
   const shape3Parameters = useMemo(() => {
-    return Object.assign({
+    return {
       ...parameters,
       stroke: 'green',
-      strokeDasharray: {'30% 120%': '0% 120%'},
+      strokeDasharray: {'30% 120%': '0% 100%'},
       strokeDashoffset: {'42%': '-86%'},
-      angle: {'-90': '-60'},
+      rotate: {[0]: [180]},
       delay: 1400,
-    });
+    };
   }, [parameters]);
 
   useEffect(() => {
@@ -80,7 +93,24 @@ const MojsExample = ({tik, delay = 300}) => {
     tl.play();
   }, [tik]);
 
-  return <div ref={animDom} className={css``} />;
+  return (
+    <div
+      ref={animDom}
+      className={css`
+        position: relative;
+        max-width: 40rem;
+        min-height: 30rem;
+        margin: 0 auto;
+        width: 100%;
+        border: 1px solid;
+        overflow: hidden;
+        @media (max-width: 768px) {
+          max-width: 100%;
+          min-height: 80vh;
+        }
+      `}
+    />
+  );
 };
 
 export {MojsExample};
