@@ -82,7 +82,22 @@ const MojsExample = ({tik}) => {
         rotate: {[0]: [360]},
       });
 
-    tl.add([triangle]);
+    const triangle2 = new mojs.Shape({
+      ...parameters,
+      shape: 'polygon',
+      points: 3,
+      top: `50%`,
+      left: `50%`,
+      fill: 'none',
+      stroke: 'black',
+      strokeWidth: 2,
+      rotate: {[0]: [360]},
+      scale: {[0]: [1]},
+      easing: 'cubic.out',
+      radius: size * 4,
+      parent: animDom.current,
+    });
+    tl.add([triangle]).append(triangle2);
 
     return () => {};
   }, [tik]);
