@@ -18,35 +18,45 @@ const MojsExample = ({tik, delay = 300}) => {
     // https://mojs.github.io/api/tweens/tween.html
     return new Timeline({
       delay,
-      onStart: (isFwd) => {
-        console.log(`onStart`, isFwd);
+      onStart(isForward, isYoyo) {
+        // console.log(`onStart`);
       },
-      onComplete: (isFwd) => {
-        console.log(`onComplete`, !isFwd);
+      onProgress(p, isForward, isYoyo) {
+        // console.log(`onProgress`, p);
+      },
+      onComplete(isForward, isYoyo) {
+        // console.log('onComplete');
       },
     });
   }, []);
 
-  const parameters = useMemo(() => {
+  const baseParameters = useMemo(() => {
     return {
       left: '50%',
       top: '50%',
-      shape: 'rect',
-      stroke: 'black',
-      strokeWidth: 40,
-      angle: {'-240': 0},
-      radius: 20,
-      scale: {0: 2},
-      rotate: {360: -360},
-      duration: 1500,
-      fill: 'none',
-      easing: 'expo.out',
+      origin: `center center`,
       isShowEnd: false,
     };
   }, []);
 
+  const squareParameters = useMemo(() => {
+    return {
+      ...baseParameters,
+      shape: 'rect',
+      stroke: 'black',
+      strokeWidth: 4,
+      radius: 40,
+      scale: {0: 2},
+      rotate: {360: -360},
+      duration: 1500, // ネストしているときは子DOMのdurationよりわずかに長くする
+      fill: 'none',
+      easing: 'expo.out',
+    };
+  }, [baseParameters]);
+
   const sparkParameters = useMemo(() => {
     return {
+      ...baseParameters,
       shape: 'sparks',
       radius: 15,
       fill: 'none',
@@ -55,17 +65,16 @@ const MojsExample = ({tik, delay = 300}) => {
       strokeDasharray: '75',
       strokeDashoffset: {75: '-75'},
       duration: 1200,
-      // easing: 'cubic.out',
       strokeLinecap: 'round',
     };
-  }, []);
+  }, [baseParameters]);
 
   const spark1Parameters = useMemo(() => {
     return {
       ...sparkParameters,
       top: '25%',
       left: '125%',
-      angle: 80,
+      rotate: 80,
     };
   }, [sparkParameters]);
 
@@ -74,7 +83,7 @@ const MojsExample = ({tik, delay = 300}) => {
       ...sparkParameters,
       top: '125%',
       left: '80%',
-      angle: 165,
+      rotate: 165,
     };
   }, [sparkParameters]);
 
@@ -83,7 +92,7 @@ const MojsExample = ({tik, delay = 300}) => {
       ...sparkParameters,
       top: '75%',
       left: '-25%',
-      angle: 250,
+      rotate: 250,
     };
   }, [sparkParameters]);
 
@@ -92,29 +101,32 @@ const MojsExample = ({tik, delay = 300}) => {
       ...sparkParameters,
       top: '-25%',
       left: '20%',
-      angle: 330,
+      rotate: 330,
     };
   }, [sparkParameters]);
 
   useEffect(() => {
-    const shape1 = new mojs.Shape({...parameters, parent: animDom.current});
+    const square = new mojs.Shape({
+      ...squareParameters,
+      parent: animDom.current,
+    });
     const spark1 = new mojs.Shape({
       ...spark1Parameters,
-      parent: shape1.el,
+      parent: square.el,
     });
     const spark2 = new mojs.Shape({
       ...spark2Parameters,
-      parent: shape1.el,
+      parent: square.el,
     });
     const spark3 = new mojs.Shape({
       ...spark3Parameters,
-      parent: shape1.el,
+      parent: square.el,
     });
     const spark4 = new mojs.Shape({
       ...spark4Parameters,
-      parent: shape1.el,
+      parent: square.el,
     });
-    tl.add([shape1, spark1, spark2, spark3, spark4]);
+    tl.add([square, spark1, spark2, spark3, spark4]);
   }, []);
 
   useEffect(() => {
@@ -124,7 +136,19 @@ const MojsExample = ({tik, delay = 300}) => {
     tl.play();
   }, [tik]);
 
-  return <div ref={animDom} className={css``} />;
+  return (
+    <div
+      ref={animDom}
+      className={css`
+        position: relative;
+        border: 1px solid;
+        max-width: 30rem;
+        min-height: 30rem;
+        width: 100%;
+        overflow: hidden;
+      `}
+    />
+  );
 };
 
 export {MojsExample};
